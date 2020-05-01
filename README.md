@@ -17,6 +17,7 @@ hits a certain set limit(_as defined in the website yaml_).<br>
 
 # How to use it?
 [Before creating container images for the operator first customize it according to your need and test it on the cluster.]<br>
+
 0) You need to have kubernetes running.<br>
 1) Install go.<br>
 2) Install kubebuilder:<br>
@@ -27,11 +28,11 @@ hits a certain set limit(_as defined in the website yaml_).<br>
 4) Install the CRDs into the cluster:<br>
    cd website-k8s-operator<br>
    make install<br>
-5) Run your controller:<br>
+5) Run the controller:<br>
    make run<br>
    (This will run in the foreground, in order to create a website workload run the following commands in another terminal)<br>
 6) Create workload:<br>
-   kubectl apply -f config/samples/<br>
+   kubectl create -f config/samples/<br>
 7) Check whether the child resources created by our operator:<br>
    Deployment:<br>
    kubectl get deployment -n <namespace><br><br>
