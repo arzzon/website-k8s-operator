@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: speedy
+
+---
+
+apiVersion: batch.arbaaz.test.in/v1
+kind: Website
+metadata:
+  name: website-speedy
+  namespace: speedy
+  labels:
+    app: speedy
+spec:
+  # Add fields here
+  image: speedy:v1
+  port: 80
+  minreplica: 1
+  maxreplica: 3
+  cpulimit: 20
+  cpurequest: 200m

@@ -1,0 +1,7 @@
+domain: arbaaz.test.in
+repo: new-operator
+resources:
+- group: batch
+  kind: Website
+  version: v1
+version: "2"
