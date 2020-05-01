@@ -21,9 +21,9 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	kv1 "k8s.io/api/core/v1"
 	kv2 "k8s.io/api/apps/v1"
 	kv3 "k8s.io/api/autoscaling/v2beta1"
-	kv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -44,13 +44,11 @@ type WebsiteReconciler struct {
 // +kubebuilder:rbac:groups=api.apps.v1,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=api.core.v1,resources=services,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=api.apps.v1,resources=deployments,verbs=get;list;watch;create;update;patch;delete
-
 // +kubebuilder:rbac:groups=api.autoscaling.v2beta1,resources=hpa,verbs=get;list;watch;create;update;patch;delete
 
 func (r *WebsiteReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	log := r.Log.WithValues("Website", req.NamespacedName)
-	// your logic here
 	// If any changes occur then reconcile function will be called.
 	// Get the website object on which reconcile is called
 	var website batchv1.Website
@@ -119,6 +117,7 @@ func (r *WebsiteReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 // Update status of the website
 func (r *WebsiteReconciler) UpdateStatus(ctx context.Context, req ctrl.Request, website batchv1.Website, deplmntWebsite *kv2.Deployment) {
+	// Here we are only maintaining the current replica count for the status, more can be done.
 	website.Status.CurrentReplicas = deplmntWebsite.Spec.Replicas
 }
 
@@ -155,7 +154,7 @@ func (r *WebsiteReconciler) CreateDeployment(ctx context.Context, req ctrl.Reque
 							ImagePullPolicy: kv1.PullIfNotPresent,
 							Resources: kv1.ResourceRequirements{
 								Requests: kv1.ResourceList{
-									kv1.ResourceName("cpu"): website.Spec.CPURequest,
+									kv1.ResourceCPU: website.Spec.CPURequest,
 								},
 							},
 						},
@@ -219,7 +218,7 @@ func (r *WebsiteReconciler) RemoveService(ctx context.Context, serviceToRemove *
 		return ctrl.Result{}, err
 	}
 	log.V(1).Info("Removed website service for Website run", "websitePod", name)
-	return ctrl.Result{RequeueAfter: 20 * time.Second}, nil
+	return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 }
 
 // CreateHPA creates a HPA in the cluster
@@ -233,8 +232,9 @@ func (r *WebsiteReconciler) CreateHPA(ctx context.Context, req ctrl.Request, web
 		},
 		Spec: kv3.HorizontalPodAutoscalerSpec{
 			ScaleTargetRef: kv3.CrossVersionObjectReference{
-				Kind: "Deployment",
-				Name: website.Name,
+				Kind:       "Deployment",
+				Name:       website.Name,
+				APIVersion: "apps/v1",
 			},
 			MinReplicas: website.Spec.MinReplica,
 			MaxReplicas: website.Spec.MaxReplica,
@@ -242,7 +242,7 @@ func (r *WebsiteReconciler) CreateHPA(ctx context.Context, req ctrl.Request, web
 				kv3.MetricSpec{
 					Type: kv3.MetricSourceType("Resource"),
 					Resource: &kv3.ResourceMetricSource{
-						Name:                     kv1.ResourceName("cpu"),
+						Name:                     kv1.ResourceCPU,
 						TargetAverageUtilization: website.Spec.CPULimit,
 					},
 				},

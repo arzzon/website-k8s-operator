@@ -14,7 +14,7 @@ metadata:
     app: speedy
 spec:
   # Add fields here
-  image: speedy:v1
+  image: arbaazkhan/speedy:v1
   port: 80
   minreplica: 1
   maxreplica: 3
