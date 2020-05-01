@@ -23,25 +23,28 @@ hits a certain set limit(_as defined in the website yaml_).<br>
 2) Install kubebuilder:<br>
    refer [https://github.com/kubernetes-sigs/kubebuilder] .<br>
 3) Clone this repo:<br>
-   cd ~/go/src/<br>
-   git clone https://github.com/arbaaz-khan/website-k8s-operator.git<br>
+   <pre>cd ~/go/src/<br>
+   git clone https://github.com/arbaaz-khan/website-k8s-operator.git </pre>
 4) Install the CRDs into the cluster:<br>
-   cd website-k8s-operator<br>
-   make install<br>
+   <pre>cd website-k8s-operator<br>
+   make install</pre>
 5) Run the controller:<br>
-   make run<br>
+   <pre>make run</pre>
    (This will run in the foreground, in order to create a website workload run the following commands in another terminal)<br>
 6) Create workload:<br>
-   kubectl create -f config/samples/<br>
+   <pre>kubectl create -f config/samples/</pre>
 7) Check whether the child resources created by our operator:<br>
    Deployment:<br>
-   kubectl get deployment -n <namespace><br><br>
+   <pre>kubectl get deployment -n {namespace}</pre>
    Pods:<br>
-   kubectl get pods -n <namespace><br><br>
+   <pre>kubectl get pods -n {namespace}</pre>
    Service:<br>
-   kubectl get svc -n <namespace><br><br>
+   <pre>kubectl get svc -n {namespace}</pre>
    HPA:<br>
-   kubectl get hpa -n <namespace><br><br>
+   <pre>kubectl get hpa -n {namespace}</pre>
 
 8) If you want to test the scalability feature, then you need to run the k8s metric server:<br>
-   kubectl create -f metric-server/
+   You can follow the below link to install metric server or use the metric_server_components.yaml file from this repo.<br>
+   [https://github.com/kubernetes-sigs/metrics-server]<br>
+   or<br>
+   <pre>kubectl create -f metric-server/</pre>
