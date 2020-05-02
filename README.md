@@ -1,5 +1,7 @@
 # website-k8s-operator
 Kubernetes operator for website custom resource.<br/>
+# Please check out my medium article on building operator:<br/>
+https://medium.com/@arbaazkhan083/building-kubernetes-operator-using-kubebuilder-bb52fbd8238<br/>
 
 # What is it?<br/>
 It is a kubernetes operator developed using kubebuilder.
