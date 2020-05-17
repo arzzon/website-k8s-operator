@@ -1,5 +1,7 @@
 # website-k8s-operator
 Kubernetes operator for website custom resource.<br/>
+<img src="https://github.com/arbaaz-khan/website-k8s-operator/blob/master/operator-diagram.png" alt="Operator Diagram">
+<br/>
 # Please check out my medium article on building operator:<br/>
 https://medium.com/@arbaazkhan083/building-kubernetes-operator-using-kubebuilder-bb52fbd8238<br/>
 
